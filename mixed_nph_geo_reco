@@ -1,0 +1,133 @@
+#include <iostream>
+#include <fstream>
+
+ 
+void mixed_nph_geo_reco()
+{
+  TFile *file_standalonegr[25];
+  TTree *tree_standalonegr[25];
+
+  TString path_standalonegr("/w/halld-scshelf2101/halld3/home/ihossain/reconstruction/reco_files/");
+  TString in_standalonegr[25];
+    
+  Int_t theta_value[25];
+  Double_t theta[25];
+  Double_t theta_err[25] = {0};
+ 
+  TFile *file_standaloneti[25];
+  TTree *tree_standaloneti[25];
+
+  TString path_standaloneti("/w/halld-scshelf2101/halld3/home/ihossain/t_reconstruction/reco_files/");
+  TString in_standaloneti[25];
+
+ // Int_t theta_value[25];
+ // Double_t theta[25];
+ // Double_t theta_err[25] = {0};
+
+  for(int i=0; i < 25; i++)
+    {
+      theta_value[i] = 30 + 5*i;
+      theta[i] = 30 + 5*i;
+    }
+
+  Double_t nph_ti_standalone[25];
+  Double_t nph_difference[25];
+  //Double_t nph_ti_standalonetest[25];
+
+  Double_t nph_gr_standalone[25];
+  //Double_t nph_gr_standalonetest[25];
+  
+  Double_t nph_ti_err_standalone[25];
+  Double_t nph_ti[5], nph_ti_err[5];
+
+  Double_t nph_gr_err_standalone[25];
+  Double_t nph_gr[5], nph_gr_err[5];
+
+  for(int j=0; j < 25; j++)
+    {      
+      in_standalonegr[j] = Form(path_standalonegr + "reco_%1.0d_deg.root", theta_value[j]);  
+      file_standalonegr[j] = TFile::Open(in_standalonegr[j]);
+      tree_standalonegr[j] = (TTree*) file_standalonegr[j]->Get("reco");
+      in_standaloneti[j] = Form(path_standaloneti + "reco_%1.0d_deg.root", theta_value[j]);
+      file_standaloneti[j] = TFile::Open(in_standaloneti[j]);
+      tree_standaloneti[j] = (TTree*) file_standaloneti[j]->Get("reco");
+
+      tree_standaloneti[j]->SetBranchAddress("nph_ti",&nph_ti);               
+      tree_standaloneti[j]->SetBranchAddress("nph_ti_err",&nph_ti_err);
+      tree_standaloneti[j]->GetEntry(0);
+      nph_ti_standalone[j] = nph_ti[2];
+
+      tree_standalonegr[j]->SetBranchAddress("nph_gr",&nph_gr);
+      tree_standalonegr[j]->SetBranchAddress("nph_gr_err",&nph_gr_err);
+      tree_standalonegr[j]->GetEntry(0);
+      nph_gr_standalone[j] = nph_gr[2];
+
+
+      nph_gr_standalone[j] = nph_gr[2];
+      nph_ti_standalone[j] = nph_ti[2];
+      nph_ti_err_standalone[j] = nph_ti_err[2];
+      nph_gr_err_standalone[j] = nph_gr_err[2];
+      nph_difference[j] = nph_ti_standalone[j]- nph_gr_standalone[j];
+//if(theta[j] == 90 || theta[j] == 120) 
+//{
+//cout << "For th["<<theta[j]<<"] Nph_gr = ["<<nph_gr[0] <<", "<<nph_gr[1] <<", "<<nph_gr[2] <<", "<<nph_gr[3] <<", "<<nph_gr[4] <<"] "<<en//dl;
+//cout << "For th["<<theta[j]<<"] Nph_ti = ["<<nph_ti[0] <<", "<<nph_ti[1] <<", "<<nph_ti[2] <<", "<<nph_ti[3] <\
+//<", "<<nph_ti[4] <<"] "<<endl;
+//}
+      
+    }
+TCanvas * c1 = new TCanvas("c1", "c1",600,600 );
+
+    TGraphErrors* gr1 = new TGraphErrors(25, theta, nph_ti_standalone, theta_err,nph_ti_err_standalone);
+    TGraphErrors* gr2 = new TGraphErrors(25, theta, nph_gr_standalone, theta_err,nph_gr_err_standalone);
+    TGraphErrors* gr3 = new TGraphErrors(25, theta,nph_difference, theta_err,nph_gr_err_standalone);
+
+  gr1->SetTitle("Photon yield at 6 GeV/c - time imaging vs gr. reco.");
+  gr1->GetXaxis()->SetTitle("Polar angle (deg)");  
+  gr1->GetYaxis()->SetTitle("Photon yield");
+  
+  gr3->SetTitle("Photon yield at 6 GeV/c - ti minus geometric reco.");
+  gr3->GetXaxis()->SetTitle("Polar angle (deg)");
+  gr3->GetYaxis()->SetTitle("Photon yield difference");
+
+  gr1->GetYaxis()->SetRangeUser(0,200);
+  gr1->GetXaxis()->SetRangeUser(20,160);
+  gr1->GetXaxis()->SetTitleSize(0.05);
+  gr1->GetYaxis()->SetTitleSize(0.05);  
+  gr1->GetXaxis()->SetTitleOffset(0.8);
+  gr1->GetYaxis()->SetTitleOffset(0.8);
+  
+  gr3->GetYaxis()->SetRangeUser(0,20);
+  gr3->GetXaxis()->SetRangeUser(20,160);
+  gr3->GetXaxis()->SetTitleSize(0.05);
+  gr3->GetYaxis()->SetTitleSize(0.05);
+  gr3->GetXaxis()->SetTitleOffset(0.8);
+  gr3->GetYaxis()->SetTitleOffset(0.8);
+
+  gr1->SetMarkerStyle(kFullCircle);
+  gr1->SetMarkerSize(1.4);
+  gr1->SetMarkerColor(1);
+  gr1->SetLineColor(1);
+  gr1->Draw("APL");
+
+  gr2->SetMarkerStyle(kFullCircle);
+  gr2->SetMarkerSize(1.4);
+  gr2->SetMarkerColor(2);
+  gr2->SetLineColor(2);
+  gr2->Draw("same");
+  gPad->SetGrid();
+
+TCanvas * c2 = new TCanvas("c2", "c2",600,600 );
+
+  gr3->SetMarkerStyle(kFullCircle);
+  gr3->SetMarkerSize(1.4);
+  gr3->SetMarkerColor(3);
+  gr3->SetLineColor(1);
+  gr3->Draw("APL");
+
+
+
+  gPad->SetGrid();
+
+}
+

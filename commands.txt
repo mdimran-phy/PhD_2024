@@ -1,0 +1,9 @@
+--- commands to run hpDIRC simulation, reconstruction on JLab farm ---
+
+cp /work/eic3/users/nwickjlb/eicdirc_standalone_job_submit/* .
+source /apps/root/6.18.04/setroot_CUE.csh
+python3 sim_job_submit.py
+python3 geo_reco_job_submit.py
+root -l nph_geo_reco.C   // plots photon yield from geometric reconstruction
+root -l spr_geo_reco.C
+root -l sep_geo_reco.C
