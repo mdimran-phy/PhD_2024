@@ -1,0 +1,4 @@
+/u/home/ihossain/ (home directory)
+ cp /w/halld-scshelf2101/halld3/home/ihossain/t_output/hits_root_files/reco/* .
+ Then local computer directory
+ scp ihossain@login.jlab.org:/u/home/ihossain/ifarm_png/* . 
