@@ -1,0 +1,35 @@
+Command=/w/halld-scshelf2101/halld3/home/ihossain/newStand/slurmJobs
+   StdErr=/w/halld-scshelf2101/halld3/home/ihossain/newStand/log/
+     StdOut=/w/halld-scshelf2101/halld3/home/ihossain/newStand/log/
+     
+     
+     sim_job_submit.py
+       MYDIR='/w/halld-scshelf2101/halld3/home/ihossain/newStand'
+    inputThetaList='theta_values.list'
+    macrosTopDir='/w/halld-scshelf2101/halld3/home/ihossain/eicdirc/build'
+sim_command = "{0}/eicdirc -o ".format(pars.macrosTopDir) + outputFile +\
+ "-r 0 -theta {0} -x \"mix_pik\" -p 6.0 -w 0 -g 1 -h 11 -c 2031 -l 3 -trackingr\
+es 0.0005 -v 0 -gz 1 -ev 0 -b 1 -e {1}".format(inputTheta, pars.nEventsPerJob)
+
+
+
+     geo_reco_job_submit.py
+     class pars:
+    MYDIR='/w/halld-scshelf2101/halld3/home/ihossain/reconstruction'
+    inputThetaList='theta_values.list'
+    macrosTopDir='/w/halld-scshelf2101/halld3/home/ihossain/newStand/hits_root_\
+files'
+    dircmacrosTopDir='/w/halld-scshelf2101/halld3/home/ihossain/eicdirc/build'
+     inputfile = "{0}/hits_{1}_deg_mix_pik_{2}_events.root ".format(pars.macr\
+osTopDir, inputTheta, pars.nEventsPerJob)
+       lutfile = "/w/halld-scshelf2101/halld3/home/ihossain/eicdirc/data/lut.av\
+r.root "
+slurmFile.write("#SBATCH --account=halld\n")
+
+
+     nph_geo_reco.C
+ TString path_standalone("/w/halld-scshelf2101/halld3/home/ihossain/reconstruc\
+tion/reco_files/");
+
+
+

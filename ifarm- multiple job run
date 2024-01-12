@@ -1,0 +1,30 @@
+cd /w/halld-scshelf2101/halld3/home/ihossain
+mkdir folder
+cd folder
+
+emacs -nw makeSLURMJobsUser_G4_theta_values.py (for theta value change)
+MYDIR='/w/halld-scshelf2101/halld3/home/ihossain/standloneSim/'
+    inputPhiList='phi_value.list'
+    inputThetaList='theta_values.list'
+    macrosTopDir='/w/halld-scshelf2101/halld3/home/ihossain/eicdirc/build/'
+    nEventsPerJob=2000
+    nTotalEvents=4000
+    
+while line:
+            inputTheta = line.replace("\n", "")
+            for i in {"mix_pik"}:
+            
+slurmFile.write("/w/halld-scshelf2101/halld3/home/ihossain/eicdirc/build/eicdirc -r 0 -theta {0} -x {1} -p 6.0 -w 0 -h 11 -\ c 2031 -l 3 -v 0 -gz 1 -g 1 -ev 0 -e {2} \n".format(inputTheta, pid, pars.nEventsPerJob))
+
+source /site/12gev_phys/softenv.csh 2.6
+
+python3 makeSLURMJobsUser_G4_theta_values.py
+
+cd slurmJobs
+
+emacs -nw slurmJobs/slurmJob_35_theta_0deg_phi_mix_pik_2000_events.job
+
+(if your account is registered to halld we have to run   /site/bin/jcert -create )
+(if want to check your name int he list then swif2 list)
+(name check website https://scicomp.jlab.org/scicomp/slurmJob/slurmAccount)
+

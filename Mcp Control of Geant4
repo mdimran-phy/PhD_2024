@@ -1,0 +1,8 @@
+If you want to control mcp, Then first follow the Mcp layout. For example, if it is 2031 then look at the fNRow and fNcol, For 2031, fNRow = 4, fNCol=6. Then go to the PrtDetectorConstruction.cxx and go to Mcp Layout= 2031, then change fNRow and fNCol as required. Such as j=1 to j < fNRow -1. Then go to PrtTools.cxx, here you should define, total pmt. for example, for Mcp layout 2031 in 4x6 arrangement, there is 24 pmt. We can change here any combination. Then go to all 2031, change the Row and Col as necessary. Then cmake .. and make -j4.
+
+Check the hp by running code: cd eicdirc/build
+./eicdirc -o data/tmptest.root -r 0 -theta 30 -x "pi+" -p 6.0 -w 0 -h 11 -c 2031 -l 3 -v 0 -gz 1 -g 1 -ev 0 -e 5
+
+
+then go to cd eicdirc/macro
+root loadlib.C draw_hp.C'("../build/data/tmptest20.root")'
